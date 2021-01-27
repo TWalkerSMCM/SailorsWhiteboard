@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="description" content="Konva demo">
-  
+  <meta name="description" content="Konva demo">
   <meta charset="utf-8">
+  <link rel="stylesheet" href="site.css">
 </head>
-<button id='addMark'>Mark</button>
+
+<button id='add-mark'>Mark</button>
+<button id='add-boat'>Boat</button>
+<button id='pen'>Pen</button>
 
 <body>
+  <div class="menu" id='mark'>
+    <div>
+    <button id='zone-toggle'>Hide Zone</button>
+    <button id='delete-mark'>Delete</button>
+    </div>
+  </div>
+
+  <div class="menu" id='boat'>
+    <div>
+    <button id='sail-toggle'>Luff</button>
+    <button id='overlap-toggle'>Show Overlap</button>
+    <button id='delete-boat'>Delete</button>
+    </div>
+  </div>
+  
   <div id="container"></div>
-    <script src="https://unpkg.com/konva@^3/konva.js"></script>
+
+  <script src="https://unpkg.com/konva@^3/konva.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
