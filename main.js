@@ -5,12 +5,14 @@
 const stage = new Konva.Stage({
   container: 'container',
   width: 1000,
-  height: 500,
-  scale: {
-    x: 0.5,
-    y: 0.5
-  }
+  height: 1000,
+  // scale: {
+  //   x: 0.5,
+  //   y: 0.5
+  // }
 });
+
+
 const layer = new Konva.Layer();
 stage.add(layer);
 
@@ -19,7 +21,7 @@ stage.add(layer);
  */
 
 //Boat class
-class Boat{
+class Boat {
   constructor(options) {
     this.fill = options.fill || "#FFFFFF";
     this.x = options.x || 250;
@@ -32,8 +34,7 @@ class Boat{
 
   createBoat() {
     //We have a overarching group for both the boat group and the transform group to easily destroy both
-    const parent = new Konva.Group({
-    })
+    const parent = new Konva.Group({})
 
     const boatGroup = new Konva.Group({
       name: 'boat',
@@ -73,7 +74,7 @@ class Boat{
     }));
     boatGroup.add(new Konva.Line({
       name: "overlap",
-      points: [17,41,200,41],
+      points: [17, 41, 200, 41],
       stroke: 'black',
       dash: [2, 2],
       visible: false,
@@ -95,13 +96,13 @@ class Boat{
         layer.draw();
       }
     });
-    
+
     return parent;
   }
 }
 //Turning Mark class
-class TurningMark{
-  constructor(options){
+class TurningMark {
+  constructor(options) {
     this.fill = 'orange'
     this.x = options.x || 50;
     this.y = options.y || 50;
@@ -109,7 +110,7 @@ class TurningMark{
     return this.mark;
   }
 
-  createMark(){
+  createMark() {
     let group = new Konva.Group({
       name: "mark",
       x: this.x,
@@ -139,17 +140,17 @@ class TurningMark{
       mark.stopDrag();
       group.startDrag();
     });
-    
+
     group.add(mark);
 
     //Returns the group
     return group
-  
+
   }
 
 }
 //AbstractAnchor Class
-class RotateAnchor{
+class RotateAnchor {
   constructor(options) {
     if (!options.node) {
       throw new Error('Anchor needs an attached element');
@@ -246,7 +247,7 @@ class RotateAnchor{
     //Adjust overlap for tack
     var overlap = this.node.getChildren()[3];
     overlap.rotation(rotation);
-    if(rotation >= 180) overlap.scaleX(-Math.abs(overlap.scaleX()));
+    if (rotation >= 180) overlap.scaleX(-Math.abs(overlap.scaleX()));
     else overlap.scaleX(Math.abs(overlap.scaleX()));
     //We then trim the sails and adjust the "handle"
     this.trimSail(rotation);
@@ -352,35 +353,34 @@ class RotateAnchor{
       //We set the x scale based on the tack.
       if (rotation > 330) luff.scaleX(Math.abs(luff.scaleX()));
       else luff.scaleX(-Math.abs(luff.scaleX()));
-      sail.hide(); 
-      luff.show(); 
+      sail.hide();
+      luff.show();
     }
     //If the boat is on a sailable course, we then decide how to trim the sails
-    else{
+    else {
       //If the boat is being forced, we show the luffing sail
-      if(this.node.getAttr('force-luff')){
+      if (this.node.getAttr('force-luff')) {
         luff.show()
         sail.hide()
       }
       //Otherwise we show the trimmed sail
-      else{
+      else {
         luff.hide();
-        sail.show();  
+        sail.show();
       }
       //Flips the sail to be the correct orientation on the x axis
       sail.scaleX(-Math.abs(sail.scaleX()));
       luff.scaleX(-Math.abs(luff.scaleX()));
 
       //Flips the sail to be flipped correctly to the wind
-      if (rotation >= 180){
+      if (rotation >= 180) {
         sail.scaleY(-Math.abs(sail.scaleY()));
         luff.scaleY(-Math.abs(luff.scaleY()));
-      }
-      else{
+      } else {
         sail.scaleY(Math.abs(sail.scaleY()));
         luff.scaleY(Math.abs(luff.scaleY()));
       }
-      luff.rotation(rotation * 0.5);  
+      luff.rotation(rotation * 0.5);
       sail.rotation(rotation * 0.5);
     }
   }
@@ -398,7 +398,7 @@ class RotateAnchor{
   }
 }
 //Transform Group...don't look at me, I'm hideous.
-class KonvaTransformersGroup{
+class KonvaTransformersGroup {
   constructor(options) {
     this.node = options.node;
     const coordinates = this.node.getAbsolutePosition();
@@ -485,7 +485,7 @@ let menuNode;
 
 window.addEventListener('click', () => {
   // hide menu if we click and a menu exists.
-  if(menuNode){
+  if (menuNode) {
     menuNode.style.display = 'none';
   }
 });
@@ -498,25 +498,30 @@ stage.on('contextmenu', function (e) {
   if (e.target === stage) {
     return;
   }
-  
+
   //If another menu node is already open, we close it
-  if(menuNode){
+  if (menuNode) {
     menuNode.style.display = 'none';
   }
 
   //We set the currentShape and that shapes parent.
   currentShape = e.target;
   group = e.target.getParent();
-  
+
   //We set the menu based on the type of shape right clicked.
-  switch(group.name()){
+  switch (group.name()) {
     case "mark":
       menuNode = document.getElementById("mark");
+      var zone = currentShape.getParent().getChildren()[0];
+      document.getElementById('zone-toggle').innerText = (zone.visible() ? "Hide Zone" : "Show Zone")
       break;
-    case "boat":  
+    case "boat":
       menuNode = document.getElementById("boat");
+      var overlap = currentShape.getParent().getChildren()[3];
+      document.getElementById('overlap-toggle').innerText = (overlap.visible() ? "Hide Overlap" : "Show Overlap")
+      document.getElementById('sail-toggle').innerText = (currentShape.getParent().getAttr("force-luff") ? "Trim" : "Luff");
       break;
-    }
+  }
 
   //We show the respective menu
   menuNode.style.display = 'initial';
@@ -530,7 +535,13 @@ stage.on('contextmenu', function (e) {
 
 /**
  * Event Listeners
-**/
+ **/
+
+//Add mark
+document.getElementById("clear").addEventListener('click', function () {
+  layer.destroyChildren();
+  layer.draw();
+})
 
 //Add mark
 document.getElementById("add-mark").addEventListener('click', function () {
@@ -554,13 +565,12 @@ document.getElementById('delete-boat').addEventListener('click', () => {
 document.getElementById('delete-mark').addEventListener('click', () => {
   currentShape.getParent().destroy();
   layer.draw();
-  });
+});
 
 //Toggle mark zone
 document.getElementById('zone-toggle').addEventListener('click', () => {
   var zone = currentShape.getParent().getChildren()[0];
   zone.visible(!zone.visible())
-  document.getElementById('zone-toggle').innerText = (zone.visible()? "Hide Zone" : "Show Zone") 
   layer.draw();
 });
 
@@ -568,15 +578,13 @@ document.getElementById('zone-toggle').addEventListener('click', () => {
 document.getElementById('overlap-toggle').addEventListener('click', () => {
   var overlap = currentShape.getParent().getChildren()[3];
   overlap.visible(!overlap.visible())
-  document.getElementById('overlap-toggle').innerText = (overlap.visible()? "Hide Overlap" : "Show Overlap") 
   layer.draw();
 });
 
-  //Toggle sail trim
+//Toggle sail trim
 document.getElementById('sail-toggle').addEventListener('click', () => {
   var group = currentShape.getParent();
   group.setAttr("force-luff", !group.getAttr("force-luff"));
-  document.getElementById('sail-toggle').innerText = (group.getAttr("force-luff") ? "Trim" : "Luff");
   //We manually switch the sail's being displayed because the sail drawing code on fires when using the transform rotation
   //There should be a better way to do this.
   rotation = group.getChildren()[0].rotation();
@@ -591,7 +599,11 @@ document.getElementById('sail-toggle').addEventListener('click', () => {
  * Initial Shapes
  */
 layer.add(new TurningMark({}));
-layer.add(new Boat({fill: '#FF4136'}));
-layer.add(new Boat({fill: '#39CCCC'}));
+layer.add(new Boat({
+  fill: '#FF4136'
+}));
+layer.add(new Boat({
+  fill: '#39CCCC'
+}));
 
 layer.draw();

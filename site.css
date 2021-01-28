@@ -1,3 +1,104 @@
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+.i-boat{
+  padding-top: 4px;
+  padding-left: 3px;
+
+}
+.i-mark {
+  padding-left: 3px;
+  width: 1.4501953125em;
+}
+
+.i-flag {
+  width: 1.0361328125em;
+}
+
+.i-pointer {
+  width: 0.6455078125em;
+}
+
+.i-square {
+  width: 0.857421875em;
+}
+
+.i-clear {
+  padding-left: 2px;
+  width: 0.7861328125em;
+}
+
+.leftcontainer
+
+/*I want this div to be in position fixed and height as 100% of the screen. But when I do it, there is a chaos*/
+  {
+  position: absolute;
+  height: 100%;
+  z-index: 100;
+}
+
+.container {
+  position: relative;
+  background-color: blue;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+}
+
+.container{
+  /* margin: 0; */
+  /* margin: auto; */
+  /* margin-top: 5%; */
+
+}
+/* .container canvas{
+  position: absolute;
+  display:block;
+} */
+
+.toolbar {
+  border-radius: 0px 5px 5px 0px;
+  background: #AAAAAA;
+  position: fixed;
+  left: 0;
+  top: 50%;
+  margin-top: -5em;
+
+}
+
+.toolbar button {
+  /* padding: 10px; */
+  border-radius: 2px 2px 2px 2px;
+  margin: 8px;
+  display: flex;
+  width: 50px;
+  height: 50px;
+
+}
+
+.toolbar svg{
+  width: 90%; 
+  height: 90%;
+}
+
+.toolbar button:active {
+  background: #AAAAAA;
+    /* padding: 5px; */
+
+}
+
+.sidebar {
+  display: inline-block;
+  width: 50px;
+  top: 120px;
+  right: 20px;
+  background-color: gray;
+}
 
 .menu {
   display: none;
@@ -19,8 +120,4 @@
 
 .menu button:hover {
   background-color: lightgray;
-}
-
-#container{
-  border-style: solid;
 }
