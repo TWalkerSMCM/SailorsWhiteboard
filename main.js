@@ -634,7 +634,7 @@ layer.add(new TurningMark({
 }));
 
 layer.add(new Boat({
-  fill: '#FF4136',
+  fill: '#39CCCC',
   x: 635,
   y: 452,
   forceLuff: false,
@@ -642,7 +642,7 @@ layer.add(new Boat({
 }));
 
 layer.add(new Boat({
-  fill: '#39CCCC',
+  fill: '#FF4136',
   x: 562,
   y: 445,
   forceLuff: false,
