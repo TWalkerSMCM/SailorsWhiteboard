@@ -2,10 +2,13 @@
  * Stage Setup
  */
 
+var stageWidth = 2000*0.65;
+var stageHeight = 1332*0.65;
+
 const stage = new Konva.Stage({
   container: 'container',
-  width: 1000,
-  height: 1000,
+  width: stageWidth,
+  height: stageHeight,
   // scale: {
   //   x: 0.5,
   //   y: 0.5
@@ -15,6 +18,24 @@ const stage = new Konva.Stage({
 
 const layer = new Konva.Layer();
 stage.add(layer);
+function fitStageIntoParentContainer() {
+  var container = document.querySelector('.container-parent');
+
+  // now we need to fit stage into parent
+  var containerWidth = container.offsetWidth;
+  // to do this we need to scale the stage
+  var scale = containerWidth / stageWidth;
+  // scale=0.5;
+  stage.width(stageWidth * scale);
+  stage.height(stageHeight * scale);
+  stage.scale({ x: scale, y: scale });
+  stage.draw();
+}
+
+fitStageIntoParentContainer();
+// adapt the stage on any window resize
+window.addEventListener('resize', fitStageIntoParentContainer);
+
 
 /**
  * Shape classes
@@ -529,9 +550,8 @@ stage.on('contextmenu', function (e) {
   menuNode.style.top =
     containerRect.top + stage.getPointerPosition().y + 4 + 'px';
   menuNode.style.left =
-    containerRect.left + stage.getPointerPosition().x + 4 + 'px';
+    stage.getPointerPosition().x + 4 + 'px';
 });
-
 
 /**
  * Event Listeners
