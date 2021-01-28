@@ -2,8 +2,8 @@
  * Stage Setup
  */
 
-var stageWidth = 2000*0.65;
-var stageHeight = 1332*0.65;
+var stageWidth = 2000 * 0.65;
+var stageHeight = 1332 * 0.65;
 
 const stage = new Konva.Stage({
   container: 'container',
@@ -18,6 +18,7 @@ const stage = new Konva.Stage({
 
 const layer = new Konva.Layer();
 stage.add(layer);
+
 function fitStageIntoParentContainer() {
   var container = document.querySelector('.container-parent');
 
@@ -28,7 +29,10 @@ function fitStageIntoParentContainer() {
   // scale=0.5;
   stage.width(stageWidth * scale);
   stage.height(stageHeight * scale);
-  stage.scale({ x: scale, y: scale });
+  stage.scale({
+    x: scale,
+    y: scale
+  });
   stage.draw();
 }
 
@@ -48,6 +52,7 @@ class Boat {
     this.x = options.x || 250;
     this.y = options.y || 250;
     this.rotation = options.rotation || 0;
+    this.whiteSails = (this.fill == "#111111");
     this.boat = this.createBoat();
     this.transformer = null;
     return this.boat;
@@ -63,13 +68,12 @@ class Boat {
       x: this.x,
       y: this.y,
     });
-
-
+    var sailStroke = (this.whiteSails == true) ? "white" : "black";
     boatGroup.setAttr("force-luff", false);
     boatGroup.add(new Konva.Path({
       name: "boat",
       data: 'M 1.5198489,80.464693 C 1.2570339,79.223475 0.78372589,74.759231 0.48568784,70.710445 -0.76972736,53.655815 0.40585284,38.851923 4.0446629,25.892985 6.8469209,15.913243 11.989955,6.4006451 17.406878,1.1781253 L 18.628857,0 l 1.36573,1.3270447 c 3.292625,3.1993659 7.347152,9.3762373 9.864231,15.0276703 5.51464,12.381672 8.190795,30.345144 7.267126,48.779961 -0.324373,6.473973 -0.961638,13.578921 -1.374992,15.330017 l -0.158197,0.670142 H 18.627244 1.6617329 Z',
-      stroke: 'black',
+      stroke: sailStroke,
       strokeWidth: 2,
       fill: this.fill,
       offsetX: 19,
@@ -80,7 +84,7 @@ class Boat {
       name: "luff",
       offsetX: 19,
       offsetY: 40,
-      stroke: "black",
+      stroke: sailStroke,
       strokeWidth: 3,
       data: "m 18.059858,30.042588 c 0,0 -8.9396914,9.209776 -1.990686,13.218819 6.949011,4.009043 0.801809,12.294398 0.801809,12.294398 0,0 -4.009045,8.819895 1.870887,12.027129 5.879932,3.207234 -1.632516,10.992005 -1.632516,10.992005"
     }));
@@ -88,7 +92,7 @@ class Boat {
       name: "trim",
       offsetX: 19,
       offsetY: 40,
-      stroke: "black",
+      stroke: sailStroke,
       visible: false,
       strokeWidth: 3,
       data: 'm 18.059858,30.042588 c -3.439844,8.39309 -4.703369,17.646408 -3.931917,26.670704 0.691634,7.824583 3.146538,15.474324 7.139149,22.239617'
@@ -127,6 +131,7 @@ class TurningMark {
     this.fill = 'orange'
     this.x = options.x || 50;
     this.y = options.y || 50;
+    this.showInitialZone = (options.showInitialZone == undefined) ? true : options.showInitialZone;
     this.mark = this.createMark()
     return this.mark;
   }
@@ -144,6 +149,7 @@ class TurningMark {
       stroke: 'black',
       strokeWidth: 2,
       dash: [10, 4],
+      visible: this.showInitialZone,
       draggable: false,
       listening: false,
     }))
@@ -571,7 +577,10 @@ document.getElementById("add-mark").addEventListener('click', function () {
 
 //Add Boat
 document.getElementById("add-boat").addEventListener('click', function () {
-  layer.add(new Boat({}));
+  var color = $('input[name="color-input"]:checked').val();
+  layer.add(new Boat({
+    fill: color
+  }));
   layer.draw();
 })
 
@@ -616,14 +625,38 @@ document.getElementById('sail-toggle').addEventListener('click', () => {
 });
 
 /**
- * Initial Shapes
+ * Initial Scene
  */
-layer.add(new TurningMark({}));
-layer.add(new Boat({
-  fill: '#FF4136'
+layer.add(new TurningMark({
+  x: 600,
+  y: 78,
+  showInitialZone: false
 }));
+
 layer.add(new Boat({
-  fill: '#39CCCC'
+  fill: '#FF4136',
+  x: 635,
+  y: 452,
+  forceLuff: false,
+  rotation: -45,
 }));
+
+layer.add(new Boat({
+  fill: '#39CCCC',
+  x: 562,
+  y: 445,
+  forceLuff: false,
+  rotation: -45,
+}));
+
+layer.add(new Boat({
+  fill: '#FF4136',
+  x: 610,
+  y: 336,
+  forceLuff: false,
+  rotation: -45,
+}));
+
+
 
 layer.draw();

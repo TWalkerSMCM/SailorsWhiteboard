@@ -11,7 +11,6 @@
 
 <body>
   <div class="container-parent">
-    <div id="container"></div>
     <div class="menu" id='mark'>
       <div>
         <button id='zone-toggle'>Hide Zone</button>
@@ -28,6 +27,8 @@
     </div>
 
 
+    <div id="container"></div>
+
     <div class="leftcontainer">
       <div class="toolbar">
         <button id="add-boat" class="btn"><svg class="icon i-boat">
@@ -39,13 +40,45 @@
         <button id="clear" class="btn"><svg class="icon i-clear">
             <use xlink:href="#i-clear"></use>
           </svg></button>
-          <div class="color_options">
+        <div class="color-picker">
+          <div class="color-picker__item">
+            <input id="input1" type="radio" class="color-picker__input" name="color-input" value="#111111"
+              checked="checked" />
+            <label for="input1" class="color-picker__color  color-picker__color--black"></label>
+          </div>
 
+          <div class="color-picker__item">
+            <input id="input2" type="radio" class="color-picker__input" name="color-input" value="#DDDDDD" />
+            <label for="input2" class="color-picker__color color-picker__color--gray"></label>
+          </div>
+
+          <div class="color-picker__item">
+            <input id="input3" type="radio" class="color-picker__input" name="color-input" value="#2ECC40" />
+            <label for="input3" class="color-picker__color color-picker__color--green"></label>
+          </div>
+
+          <div class="color-picker__item">
+            <input id="input4" type="radio" class="color-picker__input" name="color-input" value="#39CCCC" />
+            <label for="input4" class="color-picker__color color-picker__color--teal"></label>
+          </div>
+
+          <div class="color-picker__item">
+            <input id="input5" type="radio" class="color-picker__input" name="color-input" value="#FF4136" />
+            <label for="input5" class="color-picker__color color-picker__color--red"></label>
+          </div>
+
+          <div class="color-picker__item">
+            <input id="input6" type="radio" class="color-picker__input" name="color-input" value="#FF851B" />
+            <label for="input6" class="color-picker__color color-picker__color--orange"></label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
 
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/konva@^3/konva.js"></script>
   <script src="main.js"></script>
 
