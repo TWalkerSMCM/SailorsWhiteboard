@@ -9,11 +9,14 @@ const stage = new Konva.Stage({
   container: 'container',
   width: stageWidth,
   height: stageHeight,
-  // scale: {
-  //   x: 0.5,
-  //   y: 0.5
-  // }
 });
+
+
+// var select = document.getElementById('tool');
+// select.addEventListener('change', function () {
+//   mode = select.value;
+// }
+// );
 
 
 const layer = new Konva.Layer();
@@ -21,7 +24,6 @@ stage.add(layer);
 
 function fitStageIntoParentContainer() {
   var container = document.querySelector('.container-parent');
-
   // now we need to fit stage into parent
   var containerWidth = container.offsetWidth;
   // to do this we need to scale the stage
@@ -35,8 +37,8 @@ function fitStageIntoParentContainer() {
   });
   stage.draw();
 }
-
 fitStageIntoParentContainer();
+
 // adapt the stage on any window resize
 window.addEventListener('resize', fitStageIntoParentContainer);
 
@@ -46,13 +48,71 @@ window.addEventListener('resize', fitStageIntoParentContainer);
  */
 
 //Boat class
-class Boat {
+
+
+//Takes in a rotation and adjusts the sails accordingly
+function trimSail(node, rotation) {
+    //Adjust for negative rotations, won't play with >360 rotations
+    if(rotation < 0) rotation=360+rotation; 
+
+  //Adjust overlap for tack
+  var overlap = node.getChildren()[3];
+  overlap.rotation(rotation);
+  if (rotation >= 180) overlap.scaleX(-Math.abs(overlap.scaleX()));
+  else overlap.scaleX(Math.abs(overlap.scaleX()));
+
+
+  const sail = node.getChildren()[2];
+  const luff = node.getChildren()[1];
+
+  //If the boat is head to wind, show the luffing sail and hide the trimmed sail
+  if (rotation > 330 || rotation < 30) {
+    //We reset the rotation and the y scale
+    luff.rotation(0);
+    luff.scaleY(Math.abs(luff.scaleY()));
+    //We set the x scale based on the tack.
+    if (rotation > 330) luff.scaleX(Math.abs(luff.scaleX()));
+    else luff.scaleX(-Math.abs(luff.scaleX()));
+    sail.hide();
+    luff.show();
+  }
+  //If the boat is on a sailable course, we then decide how to trim the sails
+  else {
+    //If the boat is being forced, we show the luffing sail
+    if (node.getAttr('force-luff')) {
+      luff.show()
+      sail.hide()
+    }
+    //Otherwise we show the trimmed sail
+    else {
+      luff.hide();
+      sail.show();
+    }
+    //Flips the sail to be the correct orientation on the x axis
+    sail.scaleX(-Math.abs(sail.scaleX()));
+    luff.scaleX(-Math.abs(luff.scaleX()));
+
+    //Flips the sail to be flipped correctly to the wind
+    if (rotation >= 180) {
+      sail.scaleY(-Math.abs(sail.scaleY()));
+      luff.scaleY(-Math.abs(luff.scaleY()));
+    } else {
+      sail.scaleY(Math.abs(sail.scaleY()));
+      luff.scaleY(Math.abs(luff.scaleY()));
+    }
+    luff.rotation(rotation * 0.5);
+    sail.rotation(rotation * 0.5);
+  }
+}
+
+class Boat{
   constructor(options) {
     this.fill = options.fill || "#FFFFFF";
     this.x = options.x || 250;
     this.y = options.y || 250;
     this.rotation = options.rotation || 0;
     this.whiteSails = (this.fill == "#111111");
+    this.forceLuff = (options.forceLuff == null ? false : options.forceLuff) 
     this.boat = this.createBoat();
     this.transformer = null;
     return this.boat;
@@ -68,8 +128,9 @@ class Boat {
       x: this.x,
       y: this.y,
     });
+
     var sailStroke = (this.whiteSails == true) ? "white" : "black";
-    boatGroup.setAttr("force-luff", false);
+    boatGroup.setAttr("force-luff", this.forceLuff);
     boatGroup.add(new Konva.Path({
       name: "boat",
       data: 'M 1.5198489,80.464693 C 1.2570339,79.223475 0.78372589,74.759231 0.48568784,70.710445 -0.76972736,53.655815 0.40585284,38.851923 4.0446629,25.892985 6.8469209,15.913243 11.989955,6.4006451 17.406878,1.1781253 L 18.628857,0 l 1.36573,1.3270447 c 3.292625,3.1993659 7.347152,9.3762373 9.864231,15.0276703 5.51464,12.381672 8.190795,30.345144 7.267126,48.779961 -0.324373,6.473973 -0.961638,13.578921 -1.374992,15.330017 l -0.158197,0.670142 H 18.627244 1.6617329 Z',
@@ -104,8 +165,12 @@ class Boat {
       dash: [2, 2],
       visible: false,
     }))
+
     parent.add(boatGroup);
 
+    trimSail(boatGroup, this.rotation);
+
+    
     boatGroup.on('dblclick', () => {
       if (this.transformer == null) {
         //If there is no transformer, create one and reference it in the transformer variable, also add it to the parent.
@@ -124,7 +189,8 @@ class Boat {
 
     return parent;
   }
-}
+};
+
 //Turning Mark class
 class TurningMark {
   constructor(options) {
@@ -271,13 +337,8 @@ class RotateAnchor {
     //We set the rotation of the boat first.
     this.node.getChildren()[0].rotation(rotation);
 
-    //Adjust overlap for tack
-    var overlap = this.node.getChildren()[3];
-    overlap.rotation(rotation);
-    if (rotation >= 180) overlap.scaleX(-Math.abs(overlap.scaleX()));
-    else overlap.scaleX(Math.abs(overlap.scaleX()));
     //We then trim the sails and adjust the "handle"
-    this.trimSail(rotation);
+    trimSail(this.node, rotation);
     this.centerImage(relativeSize);
     this.node.fire('customSync');
     return false;
@@ -367,50 +428,6 @@ class RotateAnchor {
     };
   }
 
-  //Takes in a rotation and adjusts the sails accordingly
-  trimSail(rotation) {
-    const sail = this.node.getChildren()[2];
-    const luff = this.node.getChildren()[1];
-
-    //If the boat is head to wind, show the luffing sail and hide the trimmed sail
-    if (rotation > 330 || rotation < 30) {
-      //We reset the rotation and the y scale
-      luff.rotation(0);
-      luff.scaleY(Math.abs(luff.scaleY()));
-      //We set the x scale based on the tack.
-      if (rotation > 330) luff.scaleX(Math.abs(luff.scaleX()));
-      else luff.scaleX(-Math.abs(luff.scaleX()));
-      sail.hide();
-      luff.show();
-    }
-    //If the boat is on a sailable course, we then decide how to trim the sails
-    else {
-      //If the boat is being forced, we show the luffing sail
-      if (this.node.getAttr('force-luff')) {
-        luff.show()
-        sail.hide()
-      }
-      //Otherwise we show the trimmed sail
-      else {
-        luff.hide();
-        sail.show();
-      }
-      //Flips the sail to be the correct orientation on the x axis
-      sail.scaleX(-Math.abs(sail.scaleX()));
-      luff.scaleX(-Math.abs(luff.scaleX()));
-
-      //Flips the sail to be flipped correctly to the wind
-      if (rotation >= 180) {
-        sail.scaleY(-Math.abs(sail.scaleY()));
-        luff.scaleY(-Math.abs(luff.scaleY()));
-      } else {
-        sail.scaleY(Math.abs(sail.scaleY()));
-        luff.scaleY(Math.abs(luff.scaleY()));
-      }
-      luff.rotation(rotation * 0.5);
-      sail.rotation(rotation * 0.5);
-    }
-  }
 
   //Rotation snap gives a 15 degree threshold on either side of the listed angles to allow consistent upwind, reaching and downwind angles.
   rotationSnap(rotation) {
@@ -429,7 +446,6 @@ class KonvaTransformersGroup {
   constructor(options) {
     this.node = options.node;
     const coordinates = this.node.getAbsolutePosition();
-    //console.log("Group created at", coordinates)
     const rotation = this.node.rotation();
     const scale = this.node.scale();
 
@@ -439,6 +455,7 @@ class KonvaTransformersGroup {
       height: this.node.height() * scale.y,
       rotation: rotation
     });
+
     this.group.addName('Transformer');
     this.group.className = 'Transformer';
     this.strokeColor = options.strokeColor || {
@@ -448,8 +465,6 @@ class KonvaTransformersGroup {
     };
     this.strokeWidth = options.strokeWidth || 2;
     this.addAnchors().then(() => {
-
-
       this.group.on('mousedown touchstart', () => {
         this.group.draggable(true);
       });
@@ -548,15 +563,19 @@ stage.on('contextmenu', function (e) {
       document.getElementById('overlap-toggle').innerText = (overlap.visible() ? "Hide Overlap" : "Show Overlap")
       document.getElementById('sail-toggle').innerText = (currentShape.getParent().getAttr("force-luff") ? "Trim" : "Luff");
       break;
+    default:
+      menuNode = null;
+      break;
   }
-
-  //We show the respective menu
-  menuNode.style.display = 'initial';
-  var containerRect = stage.container().getBoundingClientRect();
-  menuNode.style.top =
-    containerRect.top + stage.getPointerPosition().y + 4 + 'px';
-  menuNode.style.left =
-    stage.getPointerPosition().x + 4 + 'px';
+  if (menuNode !== null) {
+    //We show the respective menu
+    menuNode.style.display = 'initial';
+    var containerRect = stage.container().getBoundingClientRect();
+    menuNode.style.top =
+      containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+    menuNode.style.left =
+      stage.getPointerPosition().x + 4 + 'px';
+  }
 });
 
 /**
@@ -652,11 +671,9 @@ layer.add(new Boat({
 layer.add(new Boat({
   fill: '#FF4136',
   x: 610,
-  y: 336,
-  forceLuff: false,
+  y: 360,
+  forceLuff: true,
   rotation: -45,
 }));
-
-
 
 layer.draw();

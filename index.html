@@ -31,45 +31,53 @@
 
     <div class="leftcontainer">
       <div class="toolbar">
-        <button id="add-boat" class="btn"><svg class="icon i-boat">
-            <use xlink:href="#i-boat"></use>
-          </svg></button>
-        <button id="add-mark" class="btn"><svg class="icon i-mark">
-            <use xlink:href="#i-mark"></use>
-          </svg></button>
-        <button id="clear" class="btn"><svg class="icon i-clear">
-            <use xlink:href="#i-clear"></use>
-          </svg></button>
+        <div>
+          <input id="tool1" class="btn" name="radio-group" type="radio" checked>
+          <input id="tool2" class="btn" name="radio-group" type="radio">
+          <input id="tool3" class="btn" name="radio-group" type="radio">
+        </div>
+        <div>
+          <button id="add-boat" class="btn"><svg class="icon i-boat">
+              <use xlink:href="#i-boat"></use>
+            </svg></button>
+          <button id="add-mark" class="btn"><svg class="icon i-mark">
+              <use xlink:href="#i-mark"></use>
+            </svg></button>
+          <button id="clear" class="btn"><svg class="icon i-clear">
+              <use xlink:href="#i-clear"></use>
+            </svg></button>
+        </div>
+
         <div class="color-picker">
           <div class="color-picker__item">
-            <input id="input1" type="radio" class="color-picker__input" name="color-input" value="#111111"
+            <input id="color1" type="radio" class="color-picker__input" name="color-input" value="#111111"
               checked="checked" />
-            <label for="input1" class="color-picker__color  color-picker__color--black"></label>
+            <label for="color1" class="color-picker__color  color-picker__color--black"></label>
           </div>
 
           <div class="color-picker__item">
-            <input id="input2" type="radio" class="color-picker__input" name="color-input" value="#DDDDDD" />
-            <label for="input2" class="color-picker__color color-picker__color--gray"></label>
+            <input id="color2" type="radio" class="color-picker__input" name="color-input" value="#DDDDDD" />
+            <label for="color2" class="color-picker__color color-picker__color--gray"></label>
           </div>
 
           <div class="color-picker__item">
-            <input id="input3" type="radio" class="color-picker__input" name="color-input" value="#2ECC40" />
-            <label for="input3" class="color-picker__color color-picker__color--green"></label>
+            <input id="color3" type="radio" class="color-picker__input" name="color-input" value="#2ECC40" />
+            <label for="color3" class="color-picker__color color-picker__color--green"></label>
           </div>
 
           <div class="color-picker__item">
-            <input id="input4" type="radio" class="color-picker__input" name="color-input" value="#39CCCC" />
-            <label for="input4" class="color-picker__color color-picker__color--teal"></label>
+            <input id="color4" type="radio" class="color-picker__input" name="color-input" value="#39CCCC" />
+            <label for="color4" class="color-picker__color color-picker__color--teal"></label>
           </div>
 
           <div class="color-picker__item">
-            <input id="input5" type="radio" class="color-picker__input" name="color-input" value="#FF4136" />
-            <label for="input5" class="color-picker__color color-picker__color--red"></label>
+            <input id="color5" type="radio" class="color-picker__input" name="color-input" value="#FF4136" />
+            <label for="color5" class="color-picker__color color-picker__color--red"></label>
           </div>
 
           <div class="color-picker__item">
-            <input id="input6" type="radio" class="color-picker__input" name="color-input" value="#FF851B" />
-            <label for="input6" class="color-picker__color color-picker__color--orange"></label>
+            <input id="color6" type="radio" class="color-picker__input" name="color-input" value="#FF851B" />
+            <label for="color6" class="color-picker__color color-picker__color--orange"></label>
           </div>
         </div>
       </div>

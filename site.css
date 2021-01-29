@@ -7,11 +7,13 @@
   stroke: currentColor;
   fill: currentColor;
 }
-.i-boat{
+
+.i-boat {
   padding-top: 4px;
   padding-left: 3px;
 
 }
+
 .i-mark {
   padding-left: 3px;
   width: 1.4501953125em;
@@ -36,6 +38,7 @@
 
 /* Toolbar */
 .leftcontainer
+
 /*I want this div to be in position fixed and height as 100% of the screen. But when I do it, there is a chaos*/
   {
   position: absolute;
@@ -71,19 +74,19 @@
   height: 50px;
 }
 
-.toolbar .btn:hover{
+.toolbar .btn:hover {
   cursor: pointer;
 }
 
 
-.toolbar svg{
-  width: 90%; 
+.toolbar svg {
+  width: 90%;
   height: 90%;
 }
 
 .toolbar .btn:active {
   background: #AAAAAA;
-    /* padding: 5px; */
+  /* padding: 5px; */
 }
 
 .sidebar {
@@ -101,10 +104,11 @@
   margin: 30px 8px 8px 8px;
   grid-template-rows: 22px 22px 22px;
   grid-template-columns: 22px 22px;
-  
+
   grid-row-gap: 8px;
   grid-column-gap: 5px;
 }
+
 .color-picker__item {
   display: inline-block;
 }
@@ -112,18 +116,23 @@
 .color-picker__item:hover {
   cursor: pointer;
 }
+
 .color-picker__input {
   display: none;
 }
-.color-picker__input:checked + .color-picker__color:after {
+
+.color-picker__input:checked+.color-picker__color:after {
   content: '';
 }
-.color-picker__input:disabled + .color-picker__color {
+
+.color-picker__input:disabled+.color-picker__color {
   opacity: 0.5;
 }
-.color-picker__input:disabled + .color-picker__color:hover {
+
+.color-picker__input:disabled+.color-picker__color:hover {
   cursor: not-allowed;
 }
+
 .color-picker__color {
   position: relative;
   display: block;
@@ -133,9 +142,11 @@
   border-width: 1px;
   border-color: #8d8d8d;
 }
+
 .color-picker__color:hover {
   cursor: pointer;
 }
+
 .color-picker__color:after {
   pointer-events: none;
   position: absolute;
@@ -146,21 +157,27 @@
   outline: 2px solid black;
   content: none;
 }
+
 .color-picker__color--black {
   background: #111111;
 }
+
 .color-picker__color--gray {
   background: #DDDDDD;
 }
+
 .color-picker__color--green {
   background: #2ECC40;
 }
+
 .color-picker__color--teal {
   background: #39CCCC;
 }
+
 .color-picker__color--red {
   background: #FF4136;
 }
+
 .color-picker__color--orange {
   background: #FF851B;
 }
