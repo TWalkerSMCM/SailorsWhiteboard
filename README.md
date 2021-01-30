@@ -6,15 +6,14 @@ TODO:
 ✓ Sidebar w/ color selector
 ✓ Shift+Drag Boat Direction
 ✓ Sequential Boat Numbers 
-- Text Tool 
-- Pen Tool
+✓ Export Canvas to Image
 
 - Siteheader + About Page
+- Text Tool 
+- Pen Tool
 - Settings Menu [Zone Size, Background Color, Numbering Style, Overlap Side]
-- Export Canvas to Image
 - Serialize/Save Drawings for future editing
 - Consistent Z Index 
-
-- Color Based Boat Numbers
+- Color Based Boat Numbers, eg both a Red 1 and Green 1.
 - Laylines
 - Ladder Rungs

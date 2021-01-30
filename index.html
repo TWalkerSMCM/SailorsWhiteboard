@@ -30,51 +30,54 @@
 
     <div class="leftcontainer">
       <div class="toolbar">
-        <div>
+        <!-- <div>
           <input id="tool1" class="btn" name="radio-group" type="radio" checked>
           <input id="tool2" class="btn" name="radio-group" type="radio">
           <input id="tool3" class="btn" name="radio-group" type="radio">
-        </div>
+        </div> -->
         <div>
-          <button id="add-boat" class="btn"><svg class="icon i-boat">
+          <button id="add-boat" class="btn" title = "Add Boat"><svg class="icon i-boat">
               <use xlink:href="#i-boat"></use>
             </svg></button>
-          <button id="add-mark" class="btn"><svg class="icon i-mark">
+          <button id="add-mark" class="btn" title = "Add Mark"><svg class="icon i-mark">
               <use xlink:href="#i-mark"></use>
             </svg></button>
-          <button id="clear" class="btn"><svg class="icon i-clear">
+          <button id="clear" class="btn" title =  "Clear Stage"><svg class="icon i-clear">
               <use xlink:href="#i-clear"></use>
+            </svg></button>
+          <button id="export" class="btn" title = "Export to PNG"><svg class="icon i-export">
+              <use xlink:href="#i-export"></use>
             </svg></button>
         </div>
 
         <div class="color-picker">
-          <div class="color-picker__item">
+          <div class="color-picker__item" title="Black">
             <input id="color1" type="radio" class="color-picker__input" name="color-input" value="#111111"
               checked="checked" />
             <label for="color1" class="color-picker__color  color-picker__color--black"></label>
           </div>
 
-          <div class="color-picker__item">
+          <div class="color-picker__item" title="Gray">
             <input id="color2" type="radio" class="color-picker__input" name="color-input" value="#DDDDDD" />
             <label for="color2" class="color-picker__color color-picker__color--gray"></label>
           </div>
 
-          <div class="color-picker__item">
+          <div class="color-picker__item" title="Green"> 
             <input id="color3" type="radio" class="color-picker__input" name="color-input" value="#2ECC40" />
             <label for="color3" class="color-picker__color color-picker__color--green"></label>
           </div>
 
-          <div class="color-picker__item">
+          <div class="color-picker__item" title="Teal">
             <input id="color4" type="radio" class="color-picker__input" name="color-input" value="#39CCCC" />
             <label for="color4" class="color-picker__color color-picker__color--teal"></label>
           </div>
 
-          <div class="color-picker__item">
+          <div class="color-picker__item" title="Green">
             <input id="color5" type="radio" class="color-picker__input" name="color-input" value="#FF4136" />
             <label for="color5" class="color-picker__color color-picker__color--red"></label>
           </div>
 
-          <div class="color-picker__item">
+          <div class="color-picker__item" title="Orange">
             <input id="color6" type="radio" class="color-picker__input" name="color-input" value="#FF851B" />
             <label for="color6" class="color-picker__color color-picker__color--orange"></label>
           </div>

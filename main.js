@@ -698,6 +698,27 @@ document.getElementById("clear").addEventListener('click', function () {
   layer.draw();
 })
 
+
+//Export canvas to png.
+// function from https://stackoverflow.com/a/15832662/512042
+function downloadURI(uri, name) {
+  var link = document.createElement('a');
+  link.download = name;
+  link.href = uri;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  delete link;
+}
+document.getElementById("export").addEventListener('click', function () {
+  var dataURL = stage.toDataURL({
+    pixelRatio: 4
+  });
+  downloadURI(dataURL, 'stage.png');
+})
+
+
+
 //Add mark
 document.getElementById("add-mark").addEventListener('click', function () {
   layer.add(new TurningMark({}));
@@ -786,11 +807,5 @@ layer.add(new Boat({
   rotation: -45,
 }));
 
-layer.add(new Boat({
-  fill: '#FF4136',
-  x: 610,
-  y: 360,
-  forceLuff: true,
-}));
 
 layer.draw();
