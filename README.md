@@ -1,12 +1,12 @@
-# SailingWhiteboard
- An HTML5 based sailing whiteboard to aid zoom chalktalks and discussion. 
-
+# Sailor's Whiteboard
+An HTML5 based sailing whiteboard to aid zoom chalktalks and discussion. \
+Live at: 
 TODO:
-✓ Context Menu
-✓ Sidebar w/ color selector
-✓ Shift+Drag Boat Direction
-✓ Sequential Boat Numbers 
-✓ Export Canvas to Image
+- ✓ Context Menu
+- ✓ Sidebar w/ color selector
+- ✓ Shift+Drag Boat Direction
+- ✓ Sequential Boat Numbers 
+- ✓ Export Canvas to Image
 
 - Siteheader + About Page
 - Text Tool 

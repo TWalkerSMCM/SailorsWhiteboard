@@ -56,8 +56,10 @@
   background-color: #0074D9;
   width: 70%;
   border-style: solid;
-  /* height: 60%; */
+  border-radius: 5px;
+  /* heigh t: 60%; */
   margin: auto;
+  /* bottom: 80% */
 }
 
 .toolbar {
@@ -70,7 +72,7 @@
 
 }
 
-.toolbar .btn {
+.toolbar .bttn {
   /* padding: 10px; */
   border-radius: 2px 2px 2px 2px;
   margin: 8px;
@@ -79,7 +81,7 @@
   height: 50px;
 }
 
-.toolbar .btn:hover {
+.toolbar .bttn:hover {
   cursor: pointer;
 }
 
@@ -89,7 +91,7 @@
   height: 90%;
 }
 
-.toolbar .btn:active {
+.toolbar .bttn:active {
   background: #AAAAAA;
   /* padding: 5px; */
 }
