@@ -1,15 +1,20 @@
 # SailingWhiteboard
- An HTML5 based whiteboard for sailing chalktalks
-
+ An HTML5 based sailing whiteboard to aid zoom chalktalks and discussion. 
 
 TODO:
+✓ Context Menu
+✓ Sidebar w/ color selector
+✓ Shift+Drag Boat Direction
+✓ Sequential Boat Numbers 
+- Text Tool 
+- Pen Tool
 
-Text Tool 
-Pen Tool
-Sequential Boat Numbers vs Color Based Boat Numbers
-Selected Boat + Arrow Keys to Rotate
-Export Canvas to Image
-Serialize/Save Drawings for future editing
+- Siteheader + About Page
+- Settings Menu [Zone Size, Background Color, Numbering Style, Overlap Side]
+- Export Canvas to Image
+- Serialize/Save Drawings for future editing
+- Consistent Z Index 
 
-Laylines
-Ladder Rungs
+- Color Based Boat Numbers
+- Laylines
+- Ladder Rungs

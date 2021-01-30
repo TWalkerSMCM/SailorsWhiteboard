@@ -22,6 +22,49 @@ const stage = new Konva.Stage({
 const layer = new Konva.Layer();
 stage.add(layer);
 
+
+/**
+ * Pen functionality
+ */
+
+/**
+var isPaint = false;
+var mode = 'brush';
+var lastLine;
+
+stage.on('mousedown touchstart', function (e) {
+  isPaint = true;
+  var pos = stage.getPointerPosition();
+  lastLine = new Konva.Line({
+    stroke: '#111111',
+    lineCap: 'round',
+    lineJoin: 'round',
+    strokeWidth: 5,
+    globalCompositeOperation: mode === 'brush' ? 'source-over' : 'destination-out',
+    points: [pos.x / stage.scaleX(), pos.y / stage.scaleY()],
+  });
+  layer.add(lastLine);
+})
+
+stage.on('mouseup touchend', function () {
+  isPaint = false;
+});
+
+stage.on('mousemove touchmove', function () {
+  if (!isPaint) {
+    return;
+  }
+
+  const pos = stage.getPointerPosition();
+  var newPoints = lastLine.points().concat([pos.x / stage.scaleX(), pos.y / stage.scaleY()]);
+  lastLine.points(newPoints);
+  layer.batchDraw();
+});
+ */
+
+/**
+ * Utility Functions
+ */
 function fitStageIntoParentContainer() {
   var container = document.querySelector('.container-parent');
   // now we need to fit stage into parent
@@ -38,22 +81,13 @@ function fitStageIntoParentContainer() {
   stage.draw();
 }
 fitStageIntoParentContainer();
-
 // adapt the stage on any window resize
 window.addEventListener('resize', fitStageIntoParentContainer);
 
-
-/**
- * Shape classes
- */
-
-//Boat class
-
-
 //Takes in a rotation and adjusts the sails accordingly
 function trimSail(node, rotation) {
-    //Adjust for negative rotations, won't play with >360 rotations
-    if(rotation < 0) rotation=360+rotation; 
+  //Adjust for negative rotations, won't play with >360 rotations
+  if (rotation < 0) rotation = 360 + rotation;
 
   //Adjust overlap for tack
   var overlap = node.getChildren()[3];
@@ -61,6 +95,8 @@ function trimSail(node, rotation) {
   if (rotation >= 180) overlap.scaleX(-Math.abs(overlap.scaleX()));
   else overlap.scaleX(Math.abs(overlap.scaleX()));
 
+  //Adjust number
+  node.getChildren()[4].rotation(rotation);
 
   const sail = node.getChildren()[2];
   const luff = node.getChildren()[1];
@@ -105,14 +141,32 @@ function trimSail(node, rotation) {
   }
 }
 
-class Boat{
+//Rotation snap gives a 15 degree threshold on either side of the listed angles to allow consistent upwind, reaching and downwind angles.
+function rotationSnap(rotation, threshold) {
+  //Adjust for negative rotations, won't play with >360 rotations
+  if (rotation < 0) rotation = 360 + rotation;
+  var snapAngles = [45, 90, 160, 315, 270, 200];
+  for (var i = 0; i < snapAngles.length; i++) {
+    if (rotation < snapAngles[i] + threshold && rotation > snapAngles[i] - threshold) {
+      return snapAngles[i];
+    }
+  }
+  return rotation;
+}
+
+
+/**
+ * Shape classes
+ */
+var boatCount = 1;
+class Boat {
   constructor(options) {
     this.fill = options.fill || "#FFFFFF";
     this.x = options.x || 250;
     this.y = options.y || 250;
     this.rotation = options.rotation || 0;
     this.whiteSails = (this.fill == "#111111");
-    this.forceLuff = (options.forceLuff == null ? false : options.forceLuff) 
+    this.forceLuff = (options.forceLuff == null ? false : options.forceLuff)
     this.boat = this.createBoat();
     this.transformer = null;
     return this.boat;
@@ -121,7 +175,6 @@ class Boat{
   createBoat() {
     //We have a overarching group for both the boat group and the transform group to easily destroy both
     const parent = new Konva.Group({})
-
     const boatGroup = new Konva.Group({
       name: 'boat',
       draggable: true,
@@ -165,27 +218,94 @@ class Boat{
       dash: [2, 2],
       visible: false,
     }))
-
+    boatGroup.add(new Konva.Text({
+      name: "boatnumber",
+      width: 30,
+      fontSize: 15,
+      text: boatCount++,
+      fontStyle: "bold",
+      fill: sailStroke,
+      // offsetX: 16,
+      offsetY: 25,
+      offsetX: 15,
+      align: "center",
+      rotation: this.rotation
+    }))
     parent.add(boatGroup);
 
     trimSail(boatGroup, this.rotation);
 
-    
-    boatGroup.on('dblclick', () => {
-      if (this.transformer == null) {
-        //If there is no transformer, create one and reference it in the transformer variable, also add it to the parent.
-        var boardTransformer = new KonvaTransformersGroup({
-          node: boatGroup
-        });
-        this.transformer = boardTransformer
-        parent.add(boardTransformer.group);
-      } else {
-        //If one exists we remove it and clear its reference, it removes itself from the parent.
-        this.transformer.group.destroy();
-        this.transformer = null;
-        layer.draw();
+
+    boatGroup.on('click', (e) => {
+      if (e.evt.ctrlKey) {
+        if (this.transformer == null) {
+          //If there is no transformer, create one and reference it in the transformer variable, also add it to the parent.
+          var boardTransformer = new KonvaTransformersGroup({
+            node: boatGroup
+          });
+          this.transformer = boardTransformer
+          parent.add(boardTransformer.group);
+        } else {
+          //If one exists we remove it and clear its reference, it removes itself from the parent.
+          this.transformer.group.destroy();
+          this.transformer = null;
+          layer.draw();
+        }
       }
     });
+
+
+    var interval;
+    var oldPoint;
+    var angle;
+
+    function dist(oldPoint, newPoint) {
+      var dx = oldPoint.x - newPoint.x;
+      var dy = oldPoint.y - newPoint.y;
+      return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+    }
+
+    function dragAngle() {
+      {
+        var newPoint = boatGroup.absolutePosition();
+        if (dist(oldPoint, newPoint) > 5) {
+          var vec = new Victor(newPoint.x - oldPoint.x, newPoint.y - oldPoint.y);
+          angle = rotationSnap(vec.horizontalAngleDeg() + 90, 35);
+          oldPoint = newPoint;
+        }
+      }
+    }
+
+    boatGroup.on('dragstart', function (e) {
+      // alert('dragstart');
+      if (e.evt.shiftKey) {
+        oldPoint = boatGroup.absolutePosition();
+        interval = setInterval(dragAngle, 100);
+      }
+    });
+
+    boatGroup.on("dragmove", function (e) {
+      if (e.evt.shiftKey) {
+        if (!interval) {
+          oldPoint = boatGroup.absolutePosition();
+          interval = setInterval(dragAngle, 100);
+        }
+        if (angle) {
+          boatGroup.getChildren()[0].rotation(angle);
+          trimSail(boatGroup, angle);
+        }
+      }
+    });
+
+    boatGroup.on('dragend', function (e) {
+      if (interval) {
+        clearInterval(interval);
+      }
+      interval = null;
+
+    });
+
+
 
     return parent;
   }
@@ -331,7 +451,7 @@ class RotateAnchor {
     const xDiff = (cursorPosition.x - this.nodeCenter.x);
     const angle = Math.atan2(yDiff, xDiff);
     const degrees = (angle * 180 / Math.PI);
-    const rotation = this.rotationSnap((degrees + 360 + 90) % 360);
+    const rotation = rotationSnap((degrees + 360 + 90) % 360, 15);
     const relativeSize = this.getRelativeSize();
 
     //We set the rotation of the boat first.
@@ -427,20 +547,9 @@ class RotateAnchor {
       height: (position.y + oldMiddlePoint.y) * 2
     };
   }
-
-
-  //Rotation snap gives a 15 degree threshold on either side of the listed angles to allow consistent upwind, reaching and downwind angles.
-  rotationSnap(rotation) {
-    var snapAngles = [45, 90, 160, 315, 270, 200];
-    var threshold = 15;
-    for (var i = 0; i < snapAngles.length; i++) {
-      if (rotation < snapAngles[i] + threshold && rotation > snapAngles[i] - threshold) {
-        return snapAngles[i];
-      }
-    }
-    return rotation;
-  }
 }
+
+
 //Transform Group...don't look at me, I'm hideous.
 class KonvaTransformersGroup {
   constructor(options) {
@@ -582,8 +691,9 @@ stage.on('contextmenu', function (e) {
  * Event Listeners
  **/
 
-//Add mark
+//Clear cavnas
 document.getElementById("clear").addEventListener('click', function () {
+  boatCount = 1;
   layer.destroyChildren();
   layer.draw();
 })
@@ -674,6 +784,13 @@ layer.add(new Boat({
   y: 360,
   forceLuff: true,
   rotation: -45,
+}));
+
+layer.add(new Boat({
+  fill: '#FF4136',
+  x: 610,
+  y: 360,
+  forceLuff: true,
 }));
 
 layer.draw();
