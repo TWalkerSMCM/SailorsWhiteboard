@@ -1,7 +1,7 @@
 # SailingWhiteboard
-An HTML5 based sailing whiteboard to aid zoom chalktalks and discussion. 
-Live at https://twalkersmcm.github.io/SailingWhiteboard/. 
-TODO:
+An HTML5 based sailing whiteboard to aid zoom chalktalks and discussion.  
+Live at https://twalkersmcm.github.io/SailingWhiteboard/.  
+TODO:  
 - ✓ Context Menu
 - ✓ Sidebar w/ color selector
 - ✓ Shift+Drag Boat Direction
