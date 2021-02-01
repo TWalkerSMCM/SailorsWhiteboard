@@ -30,6 +30,8 @@
 
 .i-pointer {
   width: 0.6455078125em;
+  padding-top: 3px;
+  padding-left: 3px;
 }
 
 .i-square {
@@ -38,18 +40,26 @@
 
 .i-clear {
   padding-left: 2px;
+  padding-top: 2px;
   width: 0.7861328125em;
 }
 
-/* Toolbar */
-.leftcontainer
-
-/*I want this div to be in position fixed and height as 100% of the screen. But when I do it, there is a chaos*/
-  {
-  position: absolute;
-  height: 100%;
-  z-index: 100;
+.i-cross {
+  padding-left: 4px;
+  padding-top: 4px;
+  /* width: 0.7861328125em; */
 }
+
+.i-pen{
+  padding-top: 3px;
+  padding-left: 3px;
+}
+
+.i-type{
+  padding-top: 3px;
+  padding-left: 3px;
+}
+
 
 .container-parent {
   position: relative;
@@ -57,9 +67,9 @@
   width: 70%;
   border-style: solid;
   border-radius: 5px;
-  /* heigh t: 60%; */
   margin: auto;
-  /* bottom: 80% */
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .toolbar {
@@ -67,7 +77,7 @@
   background: #AAAAAA;
   position: fixed;
   left: 0;
-  top: 50%;
+  top: 45%;
   margin-top: -10em;
 
 }
@@ -103,6 +113,75 @@
   right: 20px;
   background-color: gray;
 }
+
+/* Pointer Options */
+.pointer-options{
+  font-size: 0;
+  display: grid;
+  margin: 8px 8px 16px 8px;
+  grid-template-rows: 22px 22px;
+  grid-template-columns: 22px 22px;
+
+  grid-row-gap: 4px;
+  grid-column-gap: 4px;
+}
+
+.pointer-options__item {
+  display: inline-block;
+  background-color: white;
+  border-radius: 2px 2px 2px 2px;
+}
+
+.pointer-options__item :hover {
+  cursor: pointer;
+}
+
+.pointer-options__input {
+  display: none;
+}
+
+.pointer-options__input:checked+.pointer-options__icon:after {
+  content: '';
+}
+
+.pointer-options__input:disabled+.pointer-options__icon {
+  opacity: 0.5;
+}
+
+.pointer-options__input:disabled+.pointer-options__icon:hover {
+  /* cursor: not-allowed; */
+}
+
+.pointer-options__icon {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 22px;
+  /* border: solid; */
+  /* border-width: 1px; */
+  /* border-color: #8d8d8d; */
+}
+
+.pointer-options__icon svg{
+  width: 70%;
+  height: 70%;
+}
+
+.pointer-options__icon:hover {
+  cursor: pointer;
+}
+
+.pointer-options__icon:after {
+  pointer-events: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: calc(100%);
+  height: calc(100%);
+  outline: 2px solid black;
+  content: none;
+}
+
 
 /* Color Palette */
 .color-picker {
@@ -196,7 +275,7 @@
   position: absolute;
   width: 90px;
   background-color: white;
-  box-shadow: 0 0 5px grey;
+  box-shadow: 0 0 5px greyf;
   border-radius: 3px;
   z-index: 1;
 }

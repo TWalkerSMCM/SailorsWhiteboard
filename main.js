@@ -19,34 +19,80 @@ const stage = new Konva.Stage({
 // );
 
 
+const penLayer = new Konva.Layer();
+stage.add(penLayer);
+
 const layer = new Konva.Layer();
 stage.add(layer);
+
+
+
+/**
+ * Listener for radio button change
+ * We use the on change radio button rather than checking the state, because the check for the pen tool
+ * happens so often
+ */
+
+
+var pointerMode = "pointer";
+var paintMode = false;
+var trashMode = false;
+var textMode = false;
+
+$('input[name="pointer-input"]').change((e) => {
+  pointerMode = e.currentTarget.id;
+  paintMode = pointerMode == 'pen';
+  trashMode = pointerMode == 'trash';
+  textMode = pointerMode == 'text';
+  if (paintMode) {
+    layer.listening(false);
+  } else {
+    layer.listening(true);
+  }
+})
+
+
+/**
+ * Hotkey listener
+ */
+function keydown(e){
+  //P
+  if(e.keyCode == 80){
+    $('input[name="pointer-input"][id="pen"]').prop('checked', true).change();
+ }
+ else if(e.keyCode == 86){ 
+  $('input[name="pointer-input"][id="pointer"]').prop('checked', true).change();
+ }
+}
+
+document.addEventListener('keydown', keydown, false);
 
 
 /**
  * Pen functionality
  */
 
-/**
-var isPaint = false;
-var mode = 'brush';
-var lastLine;
 
+var isPaint = false;
+var lastLine;
+var mode = 'brush';
 stage.on('mousedown touchstart', function (e) {
-  isPaint = true;
-  var pos = stage.getPointerPosition();
-  lastLine = new Konva.Line({
-    stroke: '#111111',
-    lineCap: 'round',
-    lineJoin: 'round',
-    strokeWidth: 5,
-    globalCompositeOperation: mode === 'brush' ? 'source-over' : 'destination-out',
-    points: [pos.x / stage.scaleX(), pos.y / stage.scaleY()],
-  });
-  layer.add(lastLine);
+  if (paintMode) {
+    isPaint = true;
+    var pos = stage.getPointerPosition();
+    lastLine = new Konva.Line({
+      stroke: $('input[name="color-input"]:checked').val(),
+      lineCap: 'round',
+      lineJoin: 'round',
+      strokeWidth: 5,
+      globalCompositeOperation: mode === 'brush' ? 'source-over' : 'destination-out',
+      points: [pos.x / stage.scaleX(), pos.y / stage.scaleY()],
+    });
+    penLayer.add(lastLine);
+  }
 })
 
-stage.on('mouseup touchend', function () {
+stage.on('mouseup touchend mouseleave', function () {
   isPaint = false;
 });
 
@@ -58,9 +104,9 @@ stage.on('mousemove touchmove', function () {
   const pos = stage.getPointerPosition();
   var newPoints = lastLine.points().concat([pos.x / stage.scaleX(), pos.y / stage.scaleY()]);
   lastLine.points(newPoints);
-  layer.batchDraw();
+  penLayer.batchDraw();
 });
- */
+
 
 /**
  * Utility Functions
@@ -68,7 +114,7 @@ stage.on('mousemove touchmove', function () {
 function fitStageIntoParentContainer() {
   var container = document.querySelector('.container-parent');
   // now we need to fit stage into parent
-  var containerWidth = container.offsetWidth;
+  var containerWidth = container.offsetWidth * 0.9;
   // to do this we need to scale the stage
   var scale = containerWidth / stageWidth;
   // scale=0.5;
@@ -696,6 +742,9 @@ document.getElementById("clear").addEventListener('click', function () {
   boatCount = 1;
   layer.destroyChildren();
   layer.draw();
+  penLayer.destroyChildren();
+  penLayer.draw();
+
 })
 
 
@@ -716,8 +765,6 @@ document.getElementById("export").addEventListener('click', function () {
   });
   downloadURI(dataURL, 'stage.png');
 })
-
-
 
 //Add mark
 document.getElementById("add-mark").addEventListener('click', function () {
@@ -806,6 +853,5 @@ layer.add(new Boat({
   forceLuff: true,
   rotation: -45,
 }));
-
 
 layer.draw();
