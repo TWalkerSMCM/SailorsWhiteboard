@@ -55,14 +55,15 @@ $('input[name="pointer-input"]').change((e) => {
 /**
  * Hotkey listener
  */
-function keydown(e){
+function keydown(e) {
   //P
-  if(e.keyCode == 80){
+  if (e.keyCode == 80) {
     $('input[name="pointer-input"][id="pen"]').prop('checked', true).change();
- }
- else if(e.keyCode == 86){ 
-  $('input[name="pointer-input"][id="pointer"]').prop('checked', true).change();
- }
+  } else if (e.keyCode == 86) {
+    $('input[name="pointer-input"][id="pointer"]').prop('checked', true).change();
+  } else if (e.keyCode == 68) {
+    $('input[name="pointer-input"][id="trash"]').prop('checked', true).change();
+  }
 }
 
 document.addEventListener('keydown', keydown, false);
@@ -322,6 +323,13 @@ class Boat {
       }
     }
 
+    boatGroup.on('click', function (e) {
+      if (trashMode) {
+        boatGroup.destroy();
+        layer.draw();
+      }
+    });
+
     boatGroup.on('dragstart', function (e) {
       // alert('dragstart');
       if (e.evt.shiftKey) {
@@ -398,6 +406,14 @@ class TurningMark {
     mark.on('dragstart', () => {
       mark.stopDrag();
       group.startDrag();
+    });
+
+    //Makes a drag of the central mark, drag the group instead.
+    mark.on('click', () => {
+      if (trashMode) {
+        group.destroy();
+        layer.draw();
+      }
     });
 
     group.add(mark);
@@ -738,15 +754,16 @@ stage.on('contextmenu', function (e) {
  **/
 
 //Clear cavnas
-document.getElementById("clear").addEventListener('click', function () {
-  boatCount = 1;
-  layer.destroyChildren();
-  layer.draw();
+document.getElementById("clear").addEventListener('click', function (e) {
+  if (e.shiftKey) {
+    boatCount = 1;
+    layer.destroyChildren();
+    layer.draw();
+  }
   penLayer.destroyChildren();
   penLayer.draw();
 
 })
-
 
 //Export canvas to png.
 // function from https://stackoverflow.com/a/15832662/512042
