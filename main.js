@@ -1,7 +1,6 @@
 /**
  * Stage Setup
  */
-
 var stageWidth = 2000 * 0.65;
 var stageHeight = 1332 * 0.65;
 
@@ -11,34 +10,23 @@ const stage = new Konva.Stage({
   height: stageHeight,
 });
 
-
-// var select = document.getElementById('tool');
-// select.addEventListener('change', function () {
-//   mode = select.value;
-// }
-// );
-
-
 const penLayer = new Konva.Layer();
 stage.add(penLayer);
 
 const layer = new Konva.Layer();
 stage.add(layer);
 
-
-
 /**
  * Listener for radio button change
  * We use the on change radio button rather than checking the state, because the check for the pen tool
  * happens so often
  */
-
-
 var pointerMode = "pointer";
 var paintMode = false;
 var trashMode = false;
 var textMode = false;
 
+//On button change for setting button mode, in paint mode turns of boat/mark layer listening
 $('input[name="pointer-input"]').change((e) => {
   pointerMode = e.currentTarget.id;
   paintMode = pointerMode == 'pen';
@@ -51,33 +39,29 @@ $('input[name="pointer-input"]').change((e) => {
   }
 })
 
-
 /**
  * Hotkey listener
  */
 function keydown(e) {
-  //P
-  if (e.keyCode == 80) {
+  if (e.keyCode == 80) { //P
     $('input[name="pointer-input"][id="pen"]').prop('checked', true).change();
-  } else if (e.keyCode == 86) {
+  } else if (e.keyCode == 86) { //V
     $('input[name="pointer-input"][id="pointer"]').prop('checked', true).change();
-  } else if (e.keyCode == 68) {
+  } else if (e.keyCode == 68) { //D
     $('input[name="pointer-input"][id="trash"]').prop('checked', true).change();
   }
 }
-
 document.addEventListener('keydown', keydown, false);
-
 
 /**
  * Pen functionality
  */
-
-
 var isPaint = false;
 var lastLine;
 var mode = 'brush';
+//On mousedown check if we are in paint mode.
 stage.on('mousedown touchstart', function (e) {
+  //Starts a new line
   if (paintMode) {
     isPaint = true;
     var pos = stage.getPointerPosition();
@@ -93,21 +77,21 @@ stage.on('mousedown touchstart', function (e) {
   }
 })
 
+//On mouseup or leaving the canvas, painting stops.
 stage.on('mouseup touchend mouseleave', function () {
   isPaint = false;
 });
 
+//Appends points to the current line when in paint mode.
 stage.on('mousemove touchmove', function () {
   if (!isPaint) {
     return;
   }
-
   const pos = stage.getPointerPosition();
   var newPoints = lastLine.points().concat([pos.x / stage.scaleX(), pos.y / stage.scaleY()]);
   lastLine.points(newPoints);
   penLayer.batchDraw();
 });
-
 
 /**
  * Utility Functions
@@ -133,21 +117,15 @@ window.addEventListener('resize', fitStageIntoParentContainer);
 
 //Takes in a rotation and adjusts the sails accordingly
 function trimSail(node, rotation) {
-  //Adjust for negative rotations, won't play with >360 rotations
-  if (rotation < 0) rotation = 360 + rotation;
-
   //Adjust overlap for tack
   var overlap = node.getChildren()[3];
   overlap.rotation(rotation);
   if (rotation >= 180) overlap.scaleX(-Math.abs(overlap.scaleX()));
   else overlap.scaleX(Math.abs(overlap.scaleX()));
-
   //Adjust number
   node.getChildren()[4].rotation(rotation);
-
   const sail = node.getChildren()[2];
   const luff = node.getChildren()[1];
-
   //If the boat is head to wind, show the luffing sail and hide the trimmed sail
   if (rotation > 330 || rotation < 30) {
     //We reset the rotation and the y scale
@@ -174,7 +152,6 @@ function trimSail(node, rotation) {
     //Flips the sail to be the correct orientation on the x axis
     sail.scaleX(-Math.abs(sail.scaleX()));
     luff.scaleX(-Math.abs(luff.scaleX()));
-
     //Flips the sail to be flipped correctly to the wind
     if (rotation >= 180) {
       sail.scaleY(-Math.abs(sail.scaleY()));
@@ -201,7 +178,6 @@ function rotationSnap(rotation, threshold) {
   return rotation;
 }
 
-
 /**
  * Shape classes
  */
@@ -212,11 +188,16 @@ class Boat {
     this.x = options.x || 250;
     this.y = options.y || 250;
     this.rotation = options.rotation || 0;
+    //Adjust for negative and >360 rotations.
+    this.rotation = this.rotation % 360;
+    if(this.rotation < 0) this.rotation += 360;
+    console.log(this.rotation);
     this.whiteSails = (this.fill == "#111111");
     this.forceLuff = (options.forceLuff == null ? false : options.forceLuff)
     this.boat = this.createBoat();
     this.transformer = null;
     return this.boat;
+
   }
 
   createBoat() {
@@ -228,7 +209,6 @@ class Boat {
       x: this.x,
       y: this.y,
     });
-
     var sailStroke = (this.whiteSails == true) ? "white" : "black";
     boatGroup.setAttr("force-luff", this.forceLuff);
     boatGroup.add(new Konva.Path({
@@ -279,9 +259,7 @@ class Boat {
       rotation: this.rotation
     }))
     parent.add(boatGroup);
-
     trimSail(boatGroup, this.rotation);
-
 
     boatGroup.on('click', (e) => {
       if (e.evt.ctrlKey) {
@@ -300,7 +278,6 @@ class Boat {
         }
       }
     });
-
 
     var interval;
     var oldPoint;
@@ -356,11 +333,7 @@ class Boat {
         clearInterval(interval);
       }
       interval = null;
-
     });
-
-
-
     return parent;
   }
 };
@@ -415,15 +388,12 @@ class TurningMark {
         layer.draw();
       }
     });
-
     group.add(mark);
-
     //Returns the group
     return group
-
   }
-
 }
+
 //AbstractAnchor Class
 class RotateAnchor {
   constructor(options) {
@@ -450,7 +420,6 @@ class RotateAnchor {
     this.defaultCursor = options.defaultCursor || 'default';
     this.mouseMoveListener = null;
     this.mouseUpListener = null;
-
 
     return this.initAnchor().then((anchor) => {
       this.anchor = anchor;
@@ -486,7 +455,6 @@ class RotateAnchor {
     this.anchor.on('mouseenter', this.setCursor.bind(this));
     this.anchor.on('mouseleave', this.resetCursor.bind(this));
   }
-
   //Removes all listeners
   removeListeners() {
     this.anchor.off();
@@ -515,10 +483,8 @@ class RotateAnchor {
     const degrees = (angle * 180 / Math.PI);
     const rotation = rotationSnap((degrees + 360 + 90) % 360, 15);
     const relativeSize = this.getRelativeSize();
-
     //We set the rotation of the boat first.
     this.node.getChildren()[0].rotation(rotation);
-
     //We then trim the sails and adjust the "handle"
     trimSail(this.node, rotation);
     this.centerImage(relativeSize);
@@ -561,7 +527,6 @@ class RotateAnchor {
       y: -(this.height / 2)
     };
   }
-
 
   getScaledRelativeAngledMiddlePoint() {
     const rotation = this.node.rotation();
@@ -753,7 +718,7 @@ stage.on('contextmenu', function (e) {
  * Event Listeners
  **/
 
-//Clear cavnas
+//Clear pen layer, holding shift clears both layers.
 document.getElementById("clear").addEventListener('click', function (e) {
   if (e.shiftKey) {
     boatCount = 1;
@@ -765,8 +730,7 @@ document.getElementById("clear").addEventListener('click', function (e) {
 
 })
 
-//Export canvas to png.
-// function from https://stackoverflow.com/a/15832662/512042
+//Export canvas to png function from https://stackoverflow.com/a/15832662/512042
 function downloadURI(uri, name) {
   var link = document.createElement('a');
   link.download = name;
@@ -783,13 +747,13 @@ document.getElementById("export").addEventListener('click', function () {
   downloadURI(dataURL, 'stage.png');
 })
 
-//Add mark
+//Add mark to canvas
 document.getElementById("add-mark").addEventListener('click', function () {
   layer.add(new TurningMark({}));
   layer.draw();
 })
 
-//Add Boat
+//Add boat to canvas
 document.getElementById("add-boat").addEventListener('click', function () {
   var color = $('input[name="color-input"]:checked').val();
   layer.add(new Boat({
@@ -834,8 +798,8 @@ document.getElementById('sail-toggle').addEventListener('click', () => {
   if (rotation < 330 && rotation > 30) {
     group.getChildren()[2].visible(!group.getAttr("force-luff"));
     group.getChildren()[1].visible(group.getAttr("force-luff"));
-    layer.draw();
   }
+  layer.draw();
 });
 
 /**
