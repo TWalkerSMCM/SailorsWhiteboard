@@ -1,4 +1,4 @@
-//Returns a start finish line on a layer
+//Code containing the shapes required to form a start/finish line between a mark and a boat. The line updates automatically. 
 function createStartFinish() {
     const group = new Konva.Group()
     const cboat = new Konva.Path({
