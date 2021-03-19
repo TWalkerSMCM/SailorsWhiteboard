@@ -62,14 +62,15 @@
 
 
 .container-parent {
+  background-color: #07d900;
   position: relative;
-  background-color: #0074D9;
   width: 70%;
   border-style: solid;
   border-radius: 5px;
   margin: auto;
   margin-top: auto;
   margin-bottom: auto;
+  padding-right: 0px;
 }
 
 .toolbar {

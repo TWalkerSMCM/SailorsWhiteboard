@@ -10,6 +10,8 @@ const stage = new Konva.Stage({
   height: stageHeight,
 });
 
+//Add blue background
+stage.container().style.backgroundColor = "#0074D9";
 const penLayer = new Konva.Layer();
 stage.add(penLayer);
 
@@ -32,10 +34,12 @@ $('input[name="pointer-input"]').change((e) => {
   paintMode = pointerMode == 'pen';
   trashMode = pointerMode == 'trash';
   textMode = pointerMode == 'text';
+
   if (paintMode) {
     layer.listening(false);
   } else {
     layer.listening(true);
+    layer.draw();
   }
 })
 
@@ -49,6 +53,30 @@ function keydown(e) {
     $('input[name="pointer-input"][id="pointer"]').prop('checked', true).change();
   } else if (e.keyCode == 68) { //D
     $('input[name="pointer-input"][id="trash"]').prop('checked', true).change();
+  } else if (e.keyCode == 66) { //B
+    var color = $('input[name="color-input"]:checked').val();
+    coords = stage.getPointerPosition();
+    layer.add(new Boat({
+      fill: color,
+      x: coords.x / stage.scaleX(),
+      y: coords.y / stage.scaleY()
+    }));  
+    layer.draw();
+  }
+  else if (e.keyCode == 77) { //M
+    coords = stage.getPointerPosition();
+    layer.add(new TurningMark({
+      x: coords.x / stage.scaleX(),
+      y: coords.y / stage.scaleY()
+    }));
+    layer.draw();
+  }
+
+
+  //Number keys 1-6
+  else if (e.keyCode >= 49 && e.keyCode < 55){
+    colorCode = e.keyCode-48;
+    $('input[name="color-input"][id="color' + colorCode + '"]').prop('checked', true).change();
   }
 }
 document.addEventListener('keydown', keydown, false);
@@ -86,7 +114,7 @@ stage.on('mouseup touchend mouseleave', function () {
 stage.on('mousemove touchmove', function () {
   if (!isPaint) {
     return;
-  }
+  } 
   const pos = stage.getPointerPosition();
   var newPoints = lastLine.points().concat([pos.x / stage.scaleX(), pos.y / stage.scaleY()]);
   lastLine.points(newPoints);
@@ -111,6 +139,7 @@ function fitStageIntoParentContainer() {
   });
   stage.draw();
 }
+
 fitStageIntoParentContainer();
 // adapt the stage on any window resize
 window.addEventListener('resize', fitStageIntoParentContainer);
@@ -191,7 +220,6 @@ class Boat {
     //Adjust for negative and >360 rotations.
     this.rotation = this.rotation % 360;
     if(this.rotation < 0) this.rotation += 360;
-    console.log(this.rotation);
     this.whiteSails = (this.fill == "#111111");
     this.forceLuff = (options.forceLuff == null ? false : options.forceLuff)
     this.boat = this.createBoat();
@@ -576,7 +604,6 @@ class RotateAnchor {
   }
 }
 
-
 //Transform Group...don't look at me, I'm hideous.
 class KonvaTransformersGroup {
   constructor(options) {
@@ -758,7 +785,7 @@ document.getElementById("add-boat").addEventListener('click', function () {
   var color = $('input[name="color-input"]:checked').val();
   layer.add(new Boat({
     fill: color
-  }));
+  }));  
   layer.draw();
 })
 
