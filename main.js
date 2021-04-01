@@ -71,8 +71,6 @@ function keydown(e) {
     }));
     layer.draw();
   }
-
-
   //Number keys 1-6
   else if (e.keyCode >= 49 && e.keyCode < 55){
     colorCode = e.keyCode-48;
@@ -89,6 +87,7 @@ var lastLine;
 var mode = 'brush';
 //On mousedown check if we are in paint mode.
 stage.on('mousedown touchstart', function (e) {
+  alert("mousedown");
   //Starts a new line
   if (paintMode) {
     isPaint = true;
