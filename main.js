@@ -733,14 +733,38 @@ stage.on('contextmenu', function (e) {
   if (menuNode !== null) {
     //We show the respective menu
     menuNode.style.display = 'initial';
+    var pos = getPosition(e);
     var containerRect = stage.container().getBoundingClientRect();
+    //Having 65 here is a stopgap because I don't understand why the navbar isn't included in the boundingclientrect.
     menuNode.style.top =
-      containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+      containerRect.top + stage.getPointerPosition().y - 65 + 'px';
     menuNode.style.left =
       stage.getPointerPosition().x + 4 + 'px';
   }
 });
 
+
+function getPosition(e) {
+  var posx = 0;
+  var posy = 0;
+
+  if (!e) var e = window.event;
+
+  if (e.pageX || e.pageY) {
+    posx = e.pageX;
+    posy = e.pageY;
+  } else if (e.clientX || e.clientY) {
+    posx = e.clientX + document.body.scrollLeft + 
+                       document.documentElement.scrollLeft;
+    posy = e.clientY + document.body.scrollTop + 
+                       document.documentElement.scrollTop;
+  }
+
+  return {
+    x: posx,
+    y: posy
+  }
+}
 /**
  * Event Listeners
  **/

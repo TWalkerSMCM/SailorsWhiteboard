@@ -1,80 +1,52 @@
-/* Icons */
-.icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  stroke-width: 0;
-  stroke: currentColor;
-  fill: currentColor;
+body{
+  margin: 0px;
+    /* background-color: #333; */
 }
 
-.i-boat {
-  padding-top: 4px;
-  padding-left: 3px;
-
+.topnav{
+  background-color: #333;
+  overflow: hidden;
+  width: 100%;
 }
 
-.i-export{
-  padding-left: 3px;
-
+.topnav a{
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  font-family: 'Assistant', sans-serif;
 }
 
-.i-mark {
-  padding-left: 3px;
-  width: 1.4501953125em;
+.topnav-right {
+  float: right;
 }
 
-.i-flag {
-  width: 1.0361328125em;
-}
-
-.i-pointer {
-  width: 0.6455078125em;
-  padding-top: 3px;
-  padding-left: 3px;
-}
-
-.i-square {
-  width: 0.857421875em;
-}
-
-.i-clear {
-  padding-left: 3px;
-  padding-top: 3px;
-  width: 0.7861328125em;
-}
-
-.i-cross {
-  padding-left: 2px;
-  padding-top: 2px;
-  /* width: 0.7861328125em; */
-}
-
-.i-pen{
-  padding-top: 3px;
-  padding-left: 3px;
-}
-
-.i-type{
-  padding-top: 3px;
-  padding-left: 3px;
-}
-
+/* Canvas container */
 
 .container-parent {
-  background-color: #07d900;
   position: relative;
   width: 70%;
   border-style: solid;
   border-radius: 5px;
   margin: auto;
-  margin-top: auto;
+  margin-top: 1%;
   margin-bottom: auto;
   padding-right: 0px;
 }
 
+.container{
+  padding-top: 4em;
+}
+
+/* Sidebar */
+
 .toolbar {
   border-radius: 0px 5px 5px 0px;
+  border-style: solid;
+  border-color: #000;
+  border-width: 2px;
   background: #AAAAAA;
   position: fixed;
   left: 0;
@@ -96,7 +68,6 @@
   cursor: pointer;
 }
 
-
 .toolbar svg {
   width: 90%;
   height: 90%;
@@ -107,15 +78,8 @@
   /* padding: 5px; */
 }
 
-.sidebar {
-  display: inline-block;
-  width: 50px;
-  top: 120px;
-  right: 20px;
-  background-color: gray;
-}
 
-/* Pointer Options */
+/* Tool selector */
 .pointer-options{
   font-size: 0;
   display: grid;
@@ -185,6 +149,7 @@
 
 
 /* Color Palette */
+
 .color-picker {
   font-size: 0;
   display: grid;
@@ -269,7 +234,7 @@
   background: #FF851B;
 }
 
-/* Menu */
+/* Context Menu */
 
 .menu {
   display: none;
@@ -291,4 +256,67 @@
 
 .menu button:hover {
   background-color: lightgray;
+}
+
+
+/* Icons */
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+
+.i-boat {
+  padding-top: 4px;
+  padding-left: 3px;
+
+}
+
+.i-export{
+  padding-left: 3px;
+
+}
+
+.i-mark {
+  padding-left: 3px;
+  width: 1.4501953125em;
+}
+
+.i-flag {
+  width: 1.0361328125em;
+}
+
+.i-pointer {
+  width: 0.6455078125em;
+  padding-top: 3px;
+  padding-left: 3px;
+}
+
+.i-square {
+  width: 0.857421875em;
+}
+
+.i-clear {
+  padding-left: 3px;
+  padding-top: 3px;
+  width: 0.7861328125em;
+}
+
+.i-cross {
+  padding-left: 2px;
+  padding-top: 2px;
+  /* width: 0.7861328125em; */
+}
+
+.i-pen{
+  padding-top: 3px;
+  padding-left: 3px;
+}
+
+.i-type{
+  padding-top: 3px;
+  padding-left: 3px;
 }
