@@ -37,10 +37,12 @@ $('input[name="pointer-input"]').change((e) => {
 
   if (paintMode) {
     layer.listening(false);
+    addPaintListeners(stage);
   } else {
     layer.listening(true);
     layer.draw();
-  }
+    removePaintListeners(stage)  
+}
 })
 
 /**
@@ -80,37 +82,34 @@ function keydown(e) {
 document.addEventListener('keydown', keydown, false);
 
 /**
- * Pen functionality
+ * Pen functionality, with listeners
  */
 var isPaint = false;
 var lastLine;
 var mode = 'brush';
-//On mousedown check if we are in paint mode.
-stage.on('mousedown touchstart', function (e) {
-  alert("mousedown");
-  //Starts a new line
-  if (paintMode) {
-    isPaint = true;
-    var pos = stage.getPointerPosition();
-    lastLine = new Konva.Line({
-      stroke: $('input[name="color-input"]:checked').val(),
-      lineCap: 'round',
-      lineJoin: 'round',
-      strokeWidth: 5,
-      globalCompositeOperation: mode === 'brush' ? 'source-over' : 'destination-out',
-      points: [pos.x / stage.scaleX(), pos.y / stage.scaleY()],
-    });
-    penLayer.add(lastLine);
-  }
-})
 
-//On mouseup or leaving the canvas, painting stops.
-stage.on('mouseup touchend mouseleave', function () {
+//Paint listener for mousedown when paint is enabled
+function mousedownPaintListener(){
+  isPaint = true;
+  var pos = stage.getPointerPosition();
+  lastLine = new Konva.Line({
+    stroke: $('input[name="color-input"]:checked').val(),
+    lineCap: 'round',
+    lineJoin: 'round',
+    strokeWidth: 5,
+    globalCompositeOperation: mode === 'brush' ? 'source-over' : 'destination-out',
+    points: [pos.x / stage.scaleX(), pos.y / stage.scaleY()],
+  });
+  penLayer.add(lastLine);
+}
+
+//Disable ispaint on mouseup
+function mouseupPaintListener(){
   isPaint = false;
-});
+}
 
-//Appends points to the current line when in paint mode.
-stage.on('mousemove touchmove', function () {
+//Mousemove adds points to the existing line.
+function mousemovePaintListener(){
   if (!isPaint) {
     return;
   } 
@@ -118,7 +117,21 @@ stage.on('mousemove touchmove', function () {
   var newPoints = lastLine.points().concat([pos.x / stage.scaleX(), pos.y / stage.scaleY()]);
   lastLine.points(newPoints);
   penLayer.batchDraw();
-});
+}
+
+//Add up, down and move listeners
+function addPaintListeners(stage){
+  stage.addEventListener("mousedown", mousedownPaintListener)
+  stage.addEventListener("mouseup", mouseupPaintListener)
+  stage.addEventListener("mousemove", mousemovePaintListener)
+}
+
+//Remove up, down and move listeners
+function removePaintListeners(stage){
+  stage.removeEventListener("mousedown", mousedownPaintListener, false)
+  stage.removeEventListener("mouseup", mouseupPaintListener, false)
+  stage.removeEventListener("mousemove", mousemovePaintListener, false)
+}
 
 /**
  * Utility Functions
