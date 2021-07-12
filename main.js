@@ -1,4 +1,45 @@
 /**
+ * Shepherd tour of site
+ */
+
+ const tour = new Shepherd.Tour({
+  defaultStepOptions: {
+    cancelIcon: {
+      enabled: true
+    },
+    classes: 'class-1 class-2',
+    // classes: 'shadow-md bg-purple-dark',
+
+    scrollTo: { behavior: 'smooth', block: 'center' }
+  }
+});
+
+tour.addStep({
+  title: 'Welcome to SailorsWhiteboard',
+  text: `SailorsWhiteboard is a web based whiteboard for chalk talks and diagrams.\
+  It's easy to use, but some of its features may need some explaining.`,
+  buttons: [
+    {
+      action() {
+        return this.next();
+      },
+      text: 'Next'
+    }
+  ],
+  id: 'welcome'
+});
+
+tour.start();
+
+
+
+
+
+
+
+
+
+/**
  * Stage Setup
  */
 var stageWidth = 2000 * 0.65;
@@ -398,7 +439,8 @@ class TurningMark {
     });
     group.add(new Konva.Circle({
       name: "zone",
-      radius: 185,
+      //Radisu 185 for two boat lenght, 279 for three boatlength
+      radius: 279,
       stroke: 'black',
       strokeWidth: 2,
       dash: [10, 4],
@@ -807,7 +849,7 @@ document.getElementById("export").addEventListener('click', function () {
   var dataURL = stage.toDataURL({
     pixelRatio: 4
   });
-  downloadURI(dataURL, 'stage.png');
+  downloadURI(dataURL, 'whiteboard.png');
 })
 
 //Add mark to canvas
