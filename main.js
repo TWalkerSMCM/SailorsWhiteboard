@@ -49,6 +49,7 @@ $('input[name="pointer-input"]').change((e) => {
  * Hotkey listener
  */
 function keydown(e) {
+  shifted = e.shiftKey;
   if (e.keyCode == 80) { //P
     $('input[name="pointer-input"][id="pen"]').prop('checked', true).change();
   } else if (e.keyCode == 86) { //V
@@ -79,7 +80,14 @@ function keydown(e) {
     $('input[name="color-input"][id="color' + colorCode + '"]').prop('checked', true).change();
   }
 }
+
 document.addEventListener('keydown', keydown, false);
+
+/**
+ * Shift key listener for drag events not having snap, only keyup.
+ */
+let shifted = false;
+ $(document).on('keyup', function(e){shifted = e.shiftKey} );
 
 /**
  * Pen functionality, with listeners
@@ -521,7 +529,7 @@ class RotateAnchor {
     const xDiff = (cursorPosition.x - this.nodeCenter.x);
     const angle = Math.atan2(yDiff, xDiff);
     const degrees = (angle * 180 / Math.PI);
-    const rotation = rotationSnap((degrees + 360 + 90) % 360, 15);
+    const rotation = shifted ? (degrees + 360 + 90) % 360 : rotationSnap((degrees + 360 + 90) % 360, 15);
     const relativeSize = this.getRelativeSize();
     //We set the rotation of the boat first.
     this.node.getChildren()[0].rotation(rotation);
